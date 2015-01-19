@@ -1073,7 +1073,10 @@ var Path = PathItem.extend(/** @lends Path# */{
             } else {
                 path = new Path(Item.NO_INSERT);
                 path.insertAbove(this);
-                path.copyAttributes(this);
+
+                // Use _clone to copy over all other attributes, including style
+
+                path = this._clone(new paper[this._class]().insertAbove(this, true));
             }
             path._add(segs, 0);
             // Add dividing segment again. In case of a closed path, that's the
