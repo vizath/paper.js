@@ -147,7 +147,7 @@ var Style = Base.extend(new function() {
                 children = owner && owner._children;
             // Only unify styles on children of Groups, excluding CompoundPaths.
             if (children && children.length > 0
-                    && !(owner instanceof CompoundPath)) {
+                    && !(owner && owner.skipChildrenStyles)) {
                 for (var i = 0, l = children.length; i < l; i++)
                     children[i]._style[set](value);
             } else {
@@ -184,7 +184,7 @@ var Style = Base.extend(new function() {
             // they all have the same style.
             // If true is passed for _dontMerge, don't merge children styles
             if (!children || children.length === 0 || _dontMerge
-                    || owner instanceof CompoundPath) {
+                    || (owner && owner.skipChildrenStyles)) {
                 var value = this._values[key];
                 if (value === undefined) {
                     value = this._defaults[key];

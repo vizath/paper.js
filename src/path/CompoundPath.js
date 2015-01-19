@@ -23,7 +23,8 @@
 var CompoundPath = PathItem.extend(/** @lends CompoundPath# */{
     _class: 'CompoundPath',
     _serializeFields: {
-        children: []
+        children: [],
+        skipChildrenStyles: true
     },
 
     /**
@@ -91,6 +92,7 @@ var CompoundPath = PathItem.extend(/** @lends CompoundPath# */{
     initialize: function CompoundPath(arg) {
         // CompoundPath has children and supports named children.
         this._children = [];
+        this.skipChildrenStyles = true;
         this._namedChildren = {};
         if (!this._initialize(arg)) {
             if (typeof arg === 'string') {

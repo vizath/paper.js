@@ -41,4 +41,4 @@ eval "$COMMAND $FLAGS" > $4
 # Now convert 4 spaces to tabs, to shave of some bytes (quite a few KB actually)
 unexpand -t 4 -a $4 > "$4-tabs" && mv "$4-tabs" $4
 # Remove trailing white-space on each line
-perl -p -i -e "s/[ \t]*$//g" $4
+perl -p -i.bak -e "s/[ \t]*$//g" $4
