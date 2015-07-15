@@ -132,7 +132,7 @@ var Path = PathItem.extend(/** @lends Path# */{
     },
 
     clone: function(insert) {
-        var copy = new Path(Item.NO_INSERT);
+        var copy = new paper[this._class](Item.NO_INSERT);
         copy.setSegments(this._segments);
         copy._closed = this._closed;
         if (this._clockwise !== undefined)
@@ -1186,7 +1186,7 @@ var Path = PathItem.extend(/** @lends Path# */{
             if (typeof arg === 'number')
                 arg = this.getLocationAt(arg);
             if (!arg)
-                return null
+                return null;
             // split(location)
             index = arg.index;
             parameter = arg.parameter;
