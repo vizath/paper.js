@@ -136,6 +136,15 @@ var Path = PathItem.extend(/** @lends Path# */{
         this._closed = source._closed;
     },
 
+    clone: function(insert) {
+        var copy = new paper[this._class](Item.NO_INSERT);
+        copy.setSegments(this._segments);
+        copy._closed = this._closed;
+        if (this._clockwise !== undefined)
+            copy._clockwise = this._clockwise;
+        return this._clone(copy, insert);
+    },
+
     _changed: function _changed(flags) {
         _changed.base.call(this, flags);
         if (flags & /*#=*/ChangeFlag.GEOMETRY) {
