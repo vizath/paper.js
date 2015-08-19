@@ -2026,7 +2026,85 @@ var Path = PathItem.extend(/** @lends Path# */{
      * }
      */
     getNearestPoint: function(/* point */) {
-        return this.getNearestLocation.apply(this, arguments).getPoint();
+        if (this.isPolygon()) {
+            // source: http://stackoverflow.com/a/1501725/808657
+            function sqr(x) { return x * x }
+            function dist2(v, w) { return sqr(v.x - w.x) + sqr(v.y - w.y) }
+            function distToSegmentSquared(p, v, w) {
+                var l2 = dist2(v, w);
+                if (l2 == 0) return dist2(p, v);
+                var t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
+                if (t < 0) return dist2(p, v);
+                if (t > 1) return dist2(p, w);
+                return dist2(p, { x: v.x + t * (w.x - v.x),
+                    y: v.y + t * (w.y - v.y) });
+            }
+
+            // source: http://stackoverflow.com/a/15232899/808657
+            function _pointOnLine(linePoint1, linePoint2, pt) {
+                var isValid = false;
+
+                if (linePoint1.x == linePoint2.x && linePoint1.y == linePoint2.y) linePoint1.x -= 0.00001;
+
+                var U = ((pt.x - linePoint1.x) * (linePoint2.x - linePoint1.x)) + ((pt.y - linePoint1.y) * (linePoint2.y - linePoint1.y));
+
+                var Udenom = Math.pow(linePoint2.x - linePoint1.x, 2) + Math.pow(linePoint2.y - linePoint1.y, 2);
+
+                U /= Udenom;
+
+                r = new Point();
+                r.x = linePoint1.x + (U * (linePoint2.x - linePoint1.x));
+                r.y = linePoint1.y + (U * (linePoint2.y - linePoint1.y));
+
+                var minx, maxx, miny, maxy;
+
+                minx = Math.min(linePoint1.x, linePoint2.x);
+                maxx = Math.max(linePoint1.x, linePoint2.x);
+
+                miny = Math.min(linePoint1.y, linePoint2.y);
+                maxy = Math.max(linePoint1.y, linePoint2.y);
+
+                isValid = (r.x >= minx && r.x <= maxx) && (r.y >= miny && r.y <= maxy);
+
+                return isValid ? r : null;
+            }
+
+            var point = Point.read(arguments),
+            segments = this._segments,
+            minDist = Infinity,
+            minSegment = null;
+            for (var i = 0, l = segments.length; i < l; i++) {
+                var next = segments[i].getNext();
+                if (next) {
+                    var distance = distToSegmentSquared(point, segments[i].point, next.point);
+                    if (distance < minDist) {
+                        minDist = distance;
+                        minSegment = segments[i];
+                    }
+                }
+            }
+
+            if (!minSegment) {
+                return null;
+            }
+
+            var pointOnLine = _pointOnLine(minSegment.point, minSegment.getNext().point, point);
+            if (!pointOnLine) {
+                var dist1 = dist2(minSegment.point, point);
+                var dist2 = dist2(minSegment.getNext().point, point);
+                if (dist1 < dist2) {
+                    pointOnLine = minSegment.point;
+                }
+                else {
+                    pointOnLine = minSegment.getNext().point;
+                }
+            }
+
+            return pointOnLine;
+        }
+        else {
+            return this.getNearestLocation.apply(this, arguments).getPoint();
+        }
     }
 }), new function() { // Scope for drawing
 

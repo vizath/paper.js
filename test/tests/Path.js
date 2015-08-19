@@ -107,6 +107,53 @@ test('path.removeSegments()', function() {
     }, 0);
 });
 
+test('path.getNearestPoint()', function() {
+    var path = new Path();
+    path.add(0, 0);
+    path.add(10, 0);
+    path.add(10, 10);
+    path.add(0, 10);
+    path.closePath();
+
+    var point = path.getNearestPoint(new Point(1, 5));
+    equals(function() {
+        return [point.x, point.y];
+    }, [0, 5]);
+
+    var point = path.getNearestPoint(new Point(11, 11));
+    equals(function() {
+        return [point.x, point.y];
+    }, [10, 10]);
+
+    var path = new Path();
+    path.add(0, 0);
+    path.add(100, 0);
+    path.add(100, 100);
+    path.add(0, 100);
+    path.closePath();
+
+    var point = path.getNearestPoint(new Point(1, 5));
+    equals(function() {
+        return [point.x, point.y];
+    }, [0, 5]);
+
+    var point = path.getNearestPoint(new Point(5, 20));
+    equals(function() {
+        return [point.x, point.y];
+    }, [0, 20]);
+
+    var point = path.getNearestPoint(new Point(101, 101));
+    equals(function() {
+        return [point.x, point.y];
+    }, [100, 100]);
+
+    var line = new Path.Line([10, 10], [100, 100])
+    var point = line.getNearestPoint(new Point(70, 60));
+    equals(function() {
+        return [point.x, point.y];
+    }, [65, 65]);
+});
+
 test('Is the path deselected after setting a new list of segments?', function() {
     var path = new Path([0, 0]);
     path.selected = true;
