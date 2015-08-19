@@ -26,13 +26,13 @@
     "node": ">=0.8.0"
   },
   "dependencies": {
-    "jsdom": ">=3.1.2",
-    "request": "~2.61.0"
   },
   "optionalDependencies": {
     "canvas": ">=1.2.9"
   },
   "devDependencies": {
+    "jsdom": "~3.1.2",
+    "request": "~2.61.0",
     "gulp": "^3.9.0",
     "gulp-qunit": "^1.2.1",
     "prepro": "~0.8.3",
