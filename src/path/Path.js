@@ -2194,8 +2194,6 @@ var Path = PathItem.extend(/** @lends Path# */{
     getNearestPoint: function(/* point */) {
         return this.getNearestLocation.apply(this, arguments).getPoint();
     },
-
-
     // NOTE: Documentation is in PathItem.js
     smooth: function(options) {
         // Helper method to pick the right from / to indices.
