@@ -2026,7 +2026,7 @@ var Path = PathItem.extend(/** @lends Path# */{
      * }
      */
     getNearestPoint: function(/* point */) {
-        if (this.isLinear()) {
+        if (!this.hasHandles()) {
             // source: http://stackoverflow.com/a/1501725/808657
             function sqr(x) { return x * x }
             function dist2(v, w) { return sqr(v.x - w.x) + sqr(v.y - w.y) }
