@@ -122,6 +122,8 @@ var Line = Base.extend(/** @lends Line# */{
     statics: /** @lends Line */{
         intersect: function(apx, apy, avx, avy, bpx, bpy, bvx, bvy, asVector,
                 isInfinite) {
+
+            var epsilon = 1e-12;
             // Convert 2nd points to vectors if they are not specified as such.
             if (!asVector) {
                 avx -= apx;
@@ -129,19 +131,38 @@ var Line = Base.extend(/** @lends Line# */{
                 bvx -= bpx;
                 bvy -= bpy;
             }
-            var cross = avx * bvy - avy * bvx;
+            //Calculate unit vectors
+            aMag = Math.sqrt(avx * avx + avy * avy);
+            bMag = Math.sqrt(bvx * bvx + bvy * bvy);
+            ai = avx / aMag;
+            aj = avy / aMag;
+            bi = bvx / bMag;
+            bj = bvy / bMag;
+
+            //Add fuzzyness to the points and vectors (in the direction of the unit vector)
+            favx = avx + epsilon * ai;
+            favy = avy + epsilon * aj;
+            fbvx = bvx + epsilon * bi;
+            fbvy = bvy + epsilon * bj;
+
+            fapx = apx - epsilon * ai;
+            fapy = apy - epsilon * aj;
+            fbpx = bpx - epsilon * bi;
+            fbpy = bpy - epsilon * bj;
+
+            var cross = favx * fbvy - favy * fbvx;
             // Avoid divisions by 0, and errors when getting too close to 0
             if (!Numerical.isZero(cross)) {
-                var dx = apx - bpx,
-                    dy = apy - bpy,
-                    ta = (bvx * dy - bvy * dx) / cross,
-                    tb = (avx * dy - avy * dx) / cross;
+                var dx = fapx - fbpx,
+                    dy = fapy - fbpy,
+                    ta = (fbvx * dy - fbvy * dx) / cross,
+                    tb = (favx * dy - favy * dx) / cross;
                 // Check the ranges of t parameters if the line is not allowed
                 // to extend beyond the definition points.
                 if (isInfinite || 0 <= ta && ta <= 1 && 0 <= tb && tb <= 1)
                     return new Point(
-                                apx + ta * avx,
-                                apy + ta * avy);
+                                fapx + ta * favx,
+                                fapy + ta * favy);
             }
         },
 
