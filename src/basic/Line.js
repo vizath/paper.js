@@ -132,6 +132,8 @@ var Line = Base.extend(/** @lends Line# */{
     statics: /** @lends Line */{
         intersect: function(p1x, p1y, v1x, v1y, p2x, p2y, v2x, v2y, asVector,
                 isInfinite) {
+
+            var epsilon;
             // Convert 2nd points to vectors if they are not specified as such.
             if (!asVector) {
                 v1x -= p1x;
