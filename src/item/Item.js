@@ -2136,7 +2136,7 @@ new function() { // Injection scope for hit-test functions shared with project
         }
     },
 
-    /**
+       /**
      * Fetch the descendants (children or children of children) of this item
      * that match the properties in the specified object. Extended matching is
      * possible by providing a compare function or regular expression. Matching
